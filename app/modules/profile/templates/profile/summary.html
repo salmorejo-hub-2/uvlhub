@@ -29,10 +29,9 @@
     </div>
 
 </div>
-
 <h1 class="h3 mb-3">User datasets</h1>
 
-    {% if datasets %}
+{% if datasets %}
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -42,33 +41,43 @@
                             <tr>
                                 <th>Title</th>
                                 <th>Publication type</th>
+                                <th>UVL Models</th> 
                             </tr>
                         </thead>
                         <tbody>
-                          
-                            {% for dataset in datasets %}
-                            <tr>
-                                <td>
-
-                                    {% if dataset.ds_meta_data.dataset_doi %}
-                                        <a href="{{ dataset.get_uvlhub_doi() }}">
-                                            {{ dataset.ds_meta_data.title }}
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ url_for('dataset.get_unsynchronized_dataset', dataset_id=dataset.id) }}">
-                                            {{ dataset.ds_meta_data.title }}
-                                        </a>                                    
-                                    {% endif %}
-
-                                    
-                                </td>
-                                <td>{{ dataset.ds_meta_data.publication_type.name.replace('_', ' ').title() }}</td>
-                            </tr>
+                            {% for dataset_info in datasets %}
+                                <tr>
+                                    <td>
+                                        {% if dataset_info.dataset.ds_meta_data.dataset_doi %}
+                                            <a href="{{ dataset_info.dataset.get_uvlhub_doi() }}">
+                                                {{ dataset_info.dataset.ds_meta_data.title }}
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('dataset.get_unsynchronized_dataset', dataset_id=dataset_info.dataset.id) }}">
+                                                {{ dataset_info.dataset.ds_meta_data.title }}
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ dataset_info.dataset.ds_meta_data.publication_type.name.replace('_', ' ').title() }}</td>
+                                    <td>
+                                        <ul style="padding-left: 0; list-style-type: none;"> 
+                                            {% for file in dataset_info.files %}
+                                                <li style="margin-bottom: 8px;"> 
+                                                    • {{ file.name }}
+                                                    <a href="{{ url_for('hubfile.download_file', file_id=file.id) }}" class="btn btn-outline-secondary btn-sm" style="margin-left: 8px;">
+                                                        Download
+                                                    </a>
+                                                </li>
+                                            {% else %}
+                                                <li>No UVL models available</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
                             {% else %}
-                          
-                            <tr>
-                                <td colspan="2">No datasets uploaded.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="3">No datasets uploaded.</td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -76,6 +85,8 @@
             </div>
         </div>
     </div>
+
+
     
    <div class="row">
         <div class="col-12">

@@ -43,13 +43,20 @@ def my_profile():
         .filter(DataSet.user_id == current_user.id) \
         .count()
 
-    print(user_datasets_pagination.items)
+    datasets_with_files = [
+        {
+            'dataset': dataset,
+            'files': [file for fm in dataset.feature_models for file in fm.files]
+        }
+        for dataset in user_datasets_pagination.items
+    ]
 
     return render_template(
         'profile/summary.html',
         user_profile=current_user.profile,
         user=current_user,
-        datasets=user_datasets_pagination.items,
+        datasets=datasets_with_files,
         pagination=user_datasets_pagination,
         total_datasets=total_datasets_count
     )
+
