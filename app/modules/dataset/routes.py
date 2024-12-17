@@ -361,4 +361,3 @@ def view_uvl(uvl_id):
         abort(404, description="File not found on disk")
 
     return jsonify({"content": content})
-

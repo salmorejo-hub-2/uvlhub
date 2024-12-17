@@ -6,6 +6,7 @@ from core.environment.host import get_host_for_selenium_testing
 from core.selenium.common import initialize_driver, close_driver
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 
+
 def test_dark_without_logging():
     driver = initialize_driver()
     try:
